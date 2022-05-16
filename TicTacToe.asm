@@ -18,51 +18,114 @@ mov R5, #00H  ; Zeile 6
 mov R6, #0DBH ; Zeile 7
 mov R7, #0DBH ; Zeile 8
 mov R8, #00H  ; Spieler 
-JMP switch
+JMP display
+
+;--------------------------------
 
 ; Spieler wechseln
 switch: 
 mov A, R8
 CJNE A, #00H, setzero
 mov R8, #01H
-JMP schalter
+JMP display
 
 setzero:
 mov R8, #00H
-jmp schalter
+jmp display
 
-;drawplayer:
-;mov A, R8
-;CJNE A, #00H, drawplayerone
+f1p1:
+mov A, R0
+subb A, #0C0H
+mov R0, A
 
-playerone:
+mov A, R1
+subb A, #0C0H
+mov R1, A
+JMP switch
 
+f1p2:
+mov A, R0
+subb A, #80H
+mov R0, A
+
+mov A, R1
+subb A, #40H
+mov R1, A
+JMP switch
+
+f2p1:
+
+mov A, R0
+subb A, #18H
+mov R0, A
+
+mov A, R1
+subb A, #18H
+mov R1, A
+JMP switch
+
+f2P2:
+
+mov A, R0
+subb A, #10H
+mov R0, A
+
+mov A, R1
+subb A, #8H
+mov R1, A
+JMP switch
+
+f3p1:
+
+mov A, R0
+subb A, #3H
+mov R0, A
+
+mov A, R1
+subb A, #3H
+mov R1, A
+JMP switch
+
+f3p2:
+
+mov A, R0
+subb A, #2H
+mov R0, A
+
+mov A, R1
+subb A, #1H
+mov R1, A
+JMP switch
 
 schalter:
 ; Abfrage 1te Zeile
 	CLR P2.0
-; jetzt jede Spalte prüfen
-        JB P2.4,Check1
+
+	; jetzt jede Spalte prüfen
+	JB P2.4,Check1
+	MOV A, R8
+	CJNE A, #00H, f1p1
+
+	JMP f1p2
+	
+           
+Check1: JB P2.5,Check2
         MOV A, R8
-	CJNE A, #00H, playerone
+	CJNE A, #00H, f2p1
 
-	mov A, R0
-	subb A, #0C0H
-	mov R0, A
+	JMP f2p2
+        
+Check2: JB P2.6, Check3 
+        MOV A, R8
+	CJNE A, #00H, f3p1
 
-	mov A, R1
-	subb A, #0C0H
-	mov R1, A
-	JMP display
+	JMP f3p2
+
+        
+Check3: JB P2.7, Check4
+
 	
         
-        
-Check1: JB P2.5,Check2
-        MOV A, #02h
-Check2: JB P2.6, Check3 
-        MOV A, #03h
-Check3: JB P2.7, Check4
-        MOV A, #0Ah
 Check4: Setb P2.0
 
 ; Abfrage 2te Zeile
@@ -126,7 +189,7 @@ clr p1.0
 setb p1.0
 
 ;JMP schalter
-JMP switch
+JMP schalter
 
 
 
