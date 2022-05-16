@@ -1,27 +1,62 @@
 ; TicTacToe
 
-; gesamtes Spielfeld wird leergerrrrräääääumt
+R8 data 0x08
+
+; gesamtes Spielfeld wird leergeräumt
 mov p0, #0FFH
 mov p1, #0FFH
 
 ; Spielstart
-mov R0, #0DBH
-mov R1, #0DBH
-mov R2, #00H
-mov R3, #0DBH
-mov R4, #0DBH
-mov R5, #00H
-mov R6, #0DBH
-mov R7, #0DBH
-JMP anfang
+
+; Spielfeld register
+mov R0, #0DBH ; Zeile 1
+mov R1, #0DBH ; Zeile 2
+mov R2, #00H  ; Zeile 3
+mov R3, #0DBH ; Zeile 4
+mov R4, #0DBH ; Zeile 5
+mov R5, #00H  ; Zeile 6
+mov R6, #0DBH ; Zeile 7
+mov R7, #0DBH ; Zeile 8
+mov R8, #00H  ; Spieler 
+JMP switch
+
+; Spieler wechseln
+switch: 
+mov A, R8
+CJNE A, #00H, setzero
+mov R8, #01H
+JMP schalter
+
+setzero:
+mov R8, #00H
+jmp schalter
+
+;drawplayer:
+;mov A, R8
+;CJNE A, #00H, drawplayerone
+
+playerone:
 
 
-anfang:
+schalter:
 ; Abfrage 1te Zeile
 	CLR P2.0
 ; jetzt jede Spalte prüfen
         JB P2.4,Check1
-        MOV A, #01h
+        MOV A, R8
+	CJNE A, #00H, playerone
+
+	mov A, R0
+	subb A, #0C0H
+	mov R0, A
+
+	mov A, R1
+	subb A, #0C0H
+	mov R1, A
+	JMP display
+	
+        
+        
 Check1: JB P2.5,Check2
         MOV A, #02h
 Check2: JB P2.6, Check3 
@@ -90,7 +125,9 @@ mov P0, R7
 clr p1.0
 setb p1.0
 
-JMP anfang
+;JMP schalter
+JMP switch
+
 
 
 
