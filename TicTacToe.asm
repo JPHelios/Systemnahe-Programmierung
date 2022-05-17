@@ -97,6 +97,72 @@ subb A, #1H
 mov R1, A
 JMP switch
 
+f4p1:
+
+mov A, R3
+subb A, #0C0H
+mov R3, A
+
+mov A, R4
+subb A, #0C0H
+mov R4, A
+JMP switch
+
+f4p2:
+
+mov A, R3
+subb A, #80H
+mov R3, A
+
+mov A, R4
+subb A, #40H
+mov R4, A
+JMP switch
+
+f5p1:
+
+mov A, R3
+subb A, #18H
+mov R3, A
+
+mov A, R4
+subb A, #18H
+mov R4, A
+JMP switch
+
+f5p2:
+
+mov A, R3
+subb A, #10H
+mov R3, A
+
+mov A, R4
+subb A, #8H
+mov R4, A
+JMP switch
+
+f6p1:
+
+mov A, R3
+subb A, #3H
+mov R3, A
+
+mov A, R4
+subb A, #3H
+mov R4, A
+JMP switch
+
+f6p2:
+
+mov A, R3
+subb A, #2H
+mov R4, A
+
+mov A, R3
+subb A, #1H
+mov R4, A
+JMP switch
+
 schalter:
 ; Abfrage 1te Zeile
 	CLR P2.0
@@ -115,30 +181,36 @@ Check1: JB P2.5,Check2
 
 	JMP f2p2
         
-Check2: JB P2.6, Check3 
+Check2: JB P2.6, Check4 
         MOV A, R8
 	CJNE A, #00H, f3p1
 
 	JMP f3p2
 
-        
-Check3: JB P2.7, Check4
-
-	
-        
 Check4: Setb P2.0
 
 ; Abfrage 2te Zeile
         CLR P2.1
 ; jetzt jede Spalte prüfen
         JB P2.4,Check5
-        MOV A, #04h
+        MOV A, R8
+        CJNE A, #00H, f4p1
+
+        JMP f4p2
+
+        
 Check5: JB P2.5,Check6
-        MOV A, #05h
-Check6: JB P2.6,Check7 
-        MOV A, #06h
-Check7: JB P2.7, Check8
-        MOV A, #0Bh
+        MOV A, R8
+	CJNE A, #00H, f5p1
+
+	JMP f5p2
+        
+Check6: JB P2.6,Check8
+        MOV A, R8
+        CJNE A, #00H, f6p1
+
+        JMP f6p2
+        
 Check8: Setb P2.1
 
 ; Abfrage 3te Zeile
