@@ -23,163 +23,71 @@ JMP display
 ;--------------------------------
 
 ; Spieler wechseln
-switch: 
-mov A, R8
-CJNE A, #00H, setzero
-mov R8, #01H
-JMP display
+switch: mov A, R8
+	CJNE A, #00H, setzero
+	mov R8, #01H
+	JMP display
 
 setzero:
-mov R8, #00H
-jmp display
-
-f1p1:
-mov A, R0
-subb A, #0C0H
-mov R0, A
-
-mov A, R1
-subb A, #0C0H
-mov R1, A
-JMP switch
-
-f1p2:
-mov A, R0
-subb A, #80H
-mov R0, A
-
-mov A, R1
-subb A, #40H
-mov R1, A
-JMP switch
-
-f2p1:
-
-mov A, R0
-subb A, #18H
-mov R0, A
-
-mov A, R1
-subb A, #18H
-mov R1, A
-JMP switch
-
-f2P2:
-
-mov A, R0
-subb A, #10H
-mov R0, A
-
-mov A, R1
-subb A, #8H
-mov R1, A
-JMP switch
-
-f3p1:
-
-mov A, R0
-subb A, #3H
-mov R0, A
-
-mov A, R1
-subb A, #3H
-mov R1, A
-JMP switch
-
-f3p2:
-
-mov A, R0
-subb A, #2H
-mov R0, A
-
-mov A, R1
-subb A, #1H
-mov R1, A
-JMP switch
-
-f4p1:
-
-mov A, R3
-subb A, #0C0H
-mov R3, A
-
-mov A, R4
-subb A, #0C0H
-mov R4, A
-JMP switch
-
-f4p2:
-
-mov A, R3
-subb A, #80H
-mov R3, A
-
-mov A, R4
-subb A, #40H
-mov R4, A
-JMP switch
-
-f5p1:
-
-mov A, R3
-subb A, #18H
-mov R3, A
-
-mov A, R4
-subb A, #18H
-mov R4, A
-JMP switch
-
-f5p2:
-
-mov A, R3
-subb A, #10H
-mov R3, A
-
-mov A, R4
-subb A, #8H
-mov R4, A
-JMP switch
-
-f6p1:
-
-mov A, R3
-subb A, #3H
-mov R3, A
-
-mov A, R4
-subb A, #3H
-mov R4, A
-JMP switch
-
-f6p2:
-
-mov A, R3
-subb A, #2H
-mov R4, A
-
-mov A, R3
-subb A, #1H
-mov R4, A
-JMP switch
+	mov R8, #00H
+	jmp display
 
 schalter:
-; Abfrage 1te Zeile
+	; Abfrage 1te Zeile
 	CLR P2.0
 
 	; jetzt jede Spalte prüfen
 	JB P2.4,Check1
 	MOV A, R8
 	CJNE A, #00H, f1p1
-
 	JMP f1p2
+
+f1p1:
+	mov A, R0
+	subb A, #0C0H
+	mov R0, A
+
+	mov A, R1
+	subb A, #0C0H
+	mov R1, A
+	LJMP switch
+
+f1p2:
+	mov A, R0
+	subb A, #80H
+	mov R0, A
+
+	mov A, R1
+	subb A, #40H
+	mov R1, A
+	LJMP switch
 	
            
 Check1: JB P2.5,Check2
-        MOV A, R8
+	MOV A, R8
 	CJNE A, #00H, f2p1
 
 	JMP f2p2
+
+f2p1:
+	mov A, R0
+	subb A, #18H
+	mov R0, A
+
+	mov A, R1
+	subb A, #18H
+	mov R1, A
+	LJMP switch
+
+f2p2:
+	mov A, R0
+	subb A, #10H
+	mov R0, A
+
+	mov A, R1
+	subb A, #8H
+	mov R1, A
+	LJMP switch
         
 Check2: JB P2.6, Check4 
         MOV A, R8
@@ -187,43 +95,193 @@ Check2: JB P2.6, Check4
 
 	JMP f3p2
 
+f3p1:
+	mov A, R0
+	subb A, #3H
+	mov R0, A
+
+	mov A, R1
+	subb A, #3H 
+	mov R1, A
+	LJMP switch
+
+f3p2:
+	mov A, R0
+	subb A, #2H
+	mov R0, A
+
+	mov A, R1
+	subb A, #1H
+	mov R1, A
+	LJMP switch
+
 Check4: Setb P2.0
 
-; Abfrage 2te Zeile
+	; Abfrage 2te Zeile
         CLR P2.1
-; jetzt jede Spalte prüfen
+	; jetzt jede Spalte prüfen
         JB P2.4,Check5
         MOV A, R8
         CJNE A, #00H, f4p1
 
         JMP f4p2
 
+f4p1:
+	mov A, R3
+	subb A, #0C0H
+	mov R3, A
+
+	mov A, R4
+	subb A, #0C0H
+	mov R4, A
+	LJMP switch
+
+f4p2:
+	mov A, R3
+	subb A, #80H
+	mov R3, A
+
+	mov A, R4
+	subb A, #40H
+	mov R4, A
+	LJMP switch
         
 Check5: JB P2.5,Check6
         MOV A, R8
 	CJNE A, #00H, f5p1
 
 	JMP f5p2
+
+f5p1:
+	mov A, R3
+	subb A, #18H
+	mov R3, A
+
+	mov A, R4
+	subb A, #18H
+	mov R4, A
+	LJMP switch
+
+f5p2:
+	mov A, R3
+	subb A, #10H
+	mov R3, A
+
+	mov A, R4
+	subb A, #8H
+	mov R4, A
+	LJMP switch
         
 Check6: JB P2.6,Check8
         MOV A, R8
         CJNE A, #00H, f6p1
 
         JMP f6p2
+
+f6p1:
+	mov A, R3
+	subb A, #3H
+	mov R3, A
+
+	mov A, R4
+	subb A, #3H
+	mov R4, A
+	LJMP switch
+
+
+f6p2:
+	mov A, R3
+	subb A, #2H
+	mov R3, A
+
+	mov A, R4
+	subb A, #1H
+	mov R4, A
+	LJMP switch
         
 Check8: Setb P2.1
 
-; Abfrage 3te Zeile
+	; Abfrage 3te Zeile
         CLR P2.2
-; jetzt jede Spalte prüfen
+	; jetzt jede Spalte prüfen
         JB P2.4,Check9
-        MOV A, #07h
+        MOV A, R8
+        CJNE A, #00H, f7p1
+
+        JMP f7p2
+
+f7p1:
+	mov A, R6
+	subb A, #0C0H
+	mov R6, A
+
+	mov A, R7
+	subb A, #0C0H
+	mov R7, A
+	LJMP switch	
+
+f7p2:
+	mov A, R6
+	subb A, #80H
+	mov R6, A
+
+	mov A, R7
+	subb A, #40H
+	mov R7, A
+	LJMP switch
+        
 Check9: JB P2.5,Check10
-        MOV A, #08h
-Check10: JB P2.6, Check11 
-        MOV A, #09h
-Check11: JB P2.7, Check12
-        MOV A, #0Ch
+        MOV A, R8
+        CJNE A, #00H, f8p1
+
+        JMP f8p2
+
+f8p1:
+	mov A, R6
+	subb A, #18H
+	mov R6, A
+
+	mov A, R7
+	subb A, #18H
+	mov R7, A
+	LJMP switch
+
+f8p2:
+	mov A, R6
+	subb A, #10H
+	mov R6, A
+
+	mov A, R7
+	subb A, #8H
+	mov R7, A
+	LJMP switch
+
+Check10: JB P2.6, Check12 
+        MOV A, R8
+        CJNE A, #00H, f9p1
+
+        JMP f9p2
+
+f9p1:
+	mov A, R6
+	subb A, #3H
+	mov R6, A
+
+	mov A, R7
+	subb A, #3H
+	mov R7, A
+	LJMP switch
+
+f9p2:
+	mov A, R6
+	subb A, #2H
+	mov R6, A
+
+	mov A, R7
+	subb A, #1H
+	mov R7, A
+	LJMP switch
+
 Check12: Setb P2.2
 
 
@@ -261,7 +319,7 @@ clr p1.0
 setb p1.0
 
 ;JMP schalter
-JMP schalter
+LJMP schalter
 
 
 
