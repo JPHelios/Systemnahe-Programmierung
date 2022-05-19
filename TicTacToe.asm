@@ -33,6 +33,8 @@ setzero:
 	jmp display
 
 schalter:
+	setb P2.2
+	setb P2.1
 	; Abfrage 1te Zeile
 	CLR P2.0
 
@@ -63,7 +65,10 @@ f1p2:
 	LJMP switch
 	
            
-Check1: JB P2.5,Check2
+Check1: setb P2.2
+	setb P2.1
+	CLR P2.0
+	JB P2.5,Check2
 	MOV A, R8
 	CJNE A, #00H, f2p1
 
@@ -89,7 +94,10 @@ f2p2:
 	mov R1, A
 	LJMP switch
         
-Check2: JB P2.6, Check4 
+Check2: setb P2.2
+	setb P2.1
+	CLR P2.0
+	JB P2.6, Check3
         MOV A, R8
 	CJNE A, #00H, f3p1
 
@@ -115,12 +123,12 @@ f3p2:
 	mov R1, A
 	LJMP switch
 
-Check4: Setb P2.0
-
+Check3: Setb P2.0
+	setb P2.2
 	; Abfrage 2te Zeile
         CLR P2.1
 	; jetzt jede Spalte prüfen
-        JB P2.4,Check5
+        JB P2.4,Check4
         MOV A, R8
         CJNE A, #00H, f4p1
 
@@ -146,7 +154,10 @@ f4p2:
 	mov R4, A
 	LJMP switch
         
-Check5: JB P2.5,Check6
+Check4: Setb P2.0
+	setb P2.2
+        CLR P2.1
+        JB P2.5,Check5
         MOV A, R8
 	CJNE A, #00H, f5p1
 
@@ -172,7 +183,10 @@ f5p2:
 	mov R4, A
 	LJMP switch
         
-Check6: JB P2.6,Check8
+Check5: Setb P2.0
+	setb P2.2
+        CLR P2.1
+        JB P2.6,Check6
         MOV A, R8
         CJNE A, #00H, f6p1
 
@@ -199,12 +213,12 @@ f6p2:
 	mov R4, A
 	LJMP switch
         
-Check8: Setb P2.1
-
+Check6: Setb P2.1
+	setb P2.0
 	; Abfrage 3te Zeile
         CLR P2.2
 	; jetzt jede Spalte prüfen
-        JB P2.4,Check9
+        JB P2.4,Check7
         MOV A, R8
         CJNE A, #00H, f7p1
 
@@ -230,7 +244,10 @@ f7p2:
 	mov R7, A
 	LJMP switch
         
-Check9: JB P2.5,Check10
+Check7: Setb P2.1
+	setb P2.0
+        CLR P2.2
+        JB P2.5,Check8
         MOV A, R8
         CJNE A, #00H, f8p1
 
@@ -256,7 +273,10 @@ f8p2:
 	mov R7, A
 	LJMP switch
 
-Check10: JB P2.6, Check12 
+Check8: Setb P2.1
+	setb P2.0
+        CLR P2.2
+        JB P2.6, Check9
         MOV A, R8
         CJNE A, #00H, f9p1
 
@@ -282,7 +302,9 @@ f9p2:
 	mov R7, A
 	LJMP switch
 
-Check12: Setb P2.2
+Check9: Setb P2.2
+	setb P2.0
+	setb P2.1
 
 
 display:
