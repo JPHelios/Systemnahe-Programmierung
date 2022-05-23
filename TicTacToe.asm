@@ -40,6 +40,10 @@ schalter:
 
 	; jetzt jede Spalte prüfen
 	JB P2.4,Check1
+loop1:
+	mov A, P2
+	cjne A, #0FEH, loop1
+
 	MOV A, R8
 	CJNE A, #00H, f1p1
 	JMP f1p2
@@ -69,6 +73,10 @@ Check1: setb P2.2
 	setb P2.1
 	CLR P2.0
 	JB P2.5,Check2
+loop2:
+	mov A, P2
+	cjne A, #0FEH, loop2
+	
 	MOV A, R8
 	CJNE A, #00H, f2p1
 
@@ -98,6 +106,10 @@ Check2: setb P2.2
 	setb P2.1
 	CLR P2.0
 	JB P2.6, Check3
+
+loop3:
+	mov A, P2
+	cjne A, #0FEH, loop3
         MOV A, R8
 	CJNE A, #00H, f3p1
 
@@ -129,6 +141,11 @@ Check3: Setb P2.0
         CLR P2.1
 	; jetzt jede Spalte prüfen
         JB P2.4,Check4
+
+loop4:
+	mov A, P2
+	cjne A, #0FDH, loop4
+	
         MOV A, R8
         CJNE A, #00H, f4p1
 
@@ -158,6 +175,11 @@ Check4: Setb P2.0
 	setb P2.2
         CLR P2.1
         JB P2.5,Check5
+
+loop5:
+	mov A, P2
+	cjne A, #0FDH, loop5
+	
         MOV A, R8
 	CJNE A, #00H, f5p1
 
@@ -187,6 +209,11 @@ Check5: Setb P2.0
 	setb P2.2
         CLR P2.1
         JB P2.6,Check6
+
+loop6:
+	mov A, P2
+	cjne A, #0FDH, loop6
+        
         MOV A, R8
         CJNE A, #00H, f6p1
 
@@ -219,6 +246,10 @@ Check6: Setb P2.1
         CLR P2.2
 	; jetzt jede Spalte prüfen
         JB P2.4,Check7
+
+loop7: 
+	mov A, P2
+	cjne A, #0FBH, loop7
         MOV A, R8
         CJNE A, #00H, f7p1
 
@@ -248,6 +279,11 @@ Check7: Setb P2.1
 	setb P2.0
         CLR P2.2
         JB P2.5,Check8
+
+loop8:
+	mov A, P2
+	cjne A, #0FBH, loop8
+	
         MOV A, R8
         CJNE A, #00H, f8p1
 
@@ -277,6 +313,10 @@ Check8: Setb P2.1
 	setb P2.0
         CLR P2.2
         JB P2.6, Check9
+
+loop9:
+	mov A, P2
+	cjne A, #0FBH, loop9
         MOV A, R8
         CJNE A, #00H, f9p1
 
