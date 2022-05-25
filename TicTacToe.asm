@@ -2,6 +2,18 @@
 
 R8 data 0x08
 
+F1 data 0x09
+F2 data 0x0A
+F3 data 0x0B
+F4 data 0x0C
+F5 data 0x0D
+F6 data 0x0E
+F7 data 0x0F
+F8 data 0x10
+F9 data 0x11
+
+Johannes data 0x12
+
 ; gesamtes Spielfeld wird leergeräumt
 mov p0, #0FFH
 mov p1, #0FFH
@@ -18,6 +30,16 @@ mov R5, #00H  ; Zeile 6
 mov R6, #0DBH ; Zeile 7
 mov R7, #0DBH ; Zeile 8
 mov R8, #00H  ; Spieler 
+
+mov F1, #0FFH
+mov F2, #0FEH
+mov F3, #0FDH
+mov F4, #0FCH
+mov F5, #0FBH
+mov F6, #0FAH
+mov F7, #0F9H
+mov F8, #0F8H
+
 JMP display
 
 ;--------------------------------
@@ -26,11 +48,97 @@ JMP display
 switch: mov A, R8
 	CJNE A, #00H, setzero
 	mov R8, #01H
-	JMP display
+	JMP checkrow1
 
 setzero:
 	mov R8, #00H
-	jmp display
+	jmp checkrow1
+
+checkrow1:
+	mov A, F1
+	cjne A, F2, checkrow2
+	cjne A, F3, checkrow2
+	mov Johannes, A
+	jmp getwinner
+
+checkrow2:
+	mov A, F4
+	cjne A, F5, checkrow3
+	cjne A, F6, checkrow3
+	mov Johannes, A
+	jmp getwinner
+
+checkrow3:
+	mov A, F7
+	cjne A, F8, checkcol1
+	cjne A, F9, checkcol1
+	mov Johannes, A
+	jmp getwinner
+
+checkcol1:
+	mov A, F1
+	cjne A, F4, checkcol2
+	cjne A, F7, checkcol2
+	mov Johannes, A
+	jmp getwinner
+
+checkcol2:
+	mov A, F2
+	cjne A, F5, checkcol3
+	cjne A, F8, checkcol3
+	mov Johannes, A
+	jmp getwinner
+
+checkcol3:
+	mov A, F3
+	cjne A, F6, checkdiag1
+	cjne A, F9, checkdiag1
+	mov Johannes, A
+	jmp getwinner
+
+checkdiag1:
+	mov A, F1
+	cjne A, F5, checkdiag2
+	cjne A, F9, checkdiag2
+	mov Johannes, A
+	jmp getwinner
+
+checkdiag2:
+	mov A, F3
+	cjne A, F5, nope
+	cjne A, F7, nope
+	mov Johannes, A
+	jmp getwinner
+
+nope:
+	ljmp display
+
+getwinner:
+	mov A, Johannes
+	cjne A, #2H, winner1
+	jmp winner2
+
+winner1:
+	mov R0, #0FFH
+	mov R1, #0FFH
+	mov R2, #0C3H
+	mov R3, #0C3H
+	mov R4, #0C3H
+	mov R5, #0C3H
+	mov R6, #0FFH
+	mov R7, #0FFH
+	ljmp display
+
+winner2:
+	mov R0, #0FFH
+	mov R1, #0FFH
+	mov R2, #0DFH
+	mov R3, #0EFH
+	mov R4, #0F7H
+	mov R5, #0FBH
+	mov R6, #0FFH
+	mov R7, #0FFH
+	ljmp display
 
 schalter:
 	setb P2.2
@@ -49,6 +157,7 @@ loop1:
 	JMP f1p2
 
 f1p1:
+	mov F1, #1H
 	mov A, R0
 	subb A, #0C0H
 	mov R0, A
@@ -59,6 +168,7 @@ f1p1:
 	LJMP switch
 
 f1p2:
+	mov F1, #2H
 	mov A, R0
 	subb A, #80H
 	mov R0, A
@@ -83,6 +193,7 @@ loop2:
 	JMP f2p2
 
 f2p1:
+	mov F2, #1H
 	mov A, R0
 	subb A, #18H
 	mov R0, A
@@ -93,6 +204,7 @@ f2p1:
 	LJMP switch
 
 f2p2:
+	mov F2, #2H
 	mov A, R0
 	subb A, #10H
 	mov R0, A
@@ -116,6 +228,7 @@ loop3:
 	JMP f3p2
 
 f3p1:
+	mov F3, #1H
 	mov A, R0
 	subb A, #3H
 	mov R0, A
@@ -126,6 +239,7 @@ f3p1:
 	LJMP switch
 
 f3p2:
+	mov F3, #2H
 	mov A, R0
 	subb A, #2H
 	mov R0, A
@@ -152,6 +266,7 @@ loop4:
         JMP f4p2
 
 f4p1:
+	mov F4, #1H
 	mov A, R3
 	subb A, #0C0H
 	mov R3, A
@@ -162,6 +277,7 @@ f4p1:
 	LJMP switch
 
 f4p2:
+	mov F4, #2H
 	mov A, R3
 	subb A, #80H
 	mov R3, A
@@ -186,6 +302,7 @@ loop5:
 	JMP f5p2
 
 f5p1:
+	mov F5, #1H
 	mov A, R3
 	subb A, #18H
 	mov R3, A
@@ -196,6 +313,7 @@ f5p1:
 	LJMP switch
 
 f5p2:
+	mov F5, #2H
 	mov A, R3
 	subb A, #10H
 	mov R3, A
@@ -220,6 +338,7 @@ loop6:
         JMP f6p2
 
 f6p1:
+	mov F6, #1H
 	mov A, R3
 	subb A, #3H
 	mov R3, A
@@ -231,6 +350,7 @@ f6p1:
 
 
 f6p2:
+	mov F6, #2H
 	mov A, R3
 	subb A, #2H
 	mov R3, A
@@ -256,6 +376,7 @@ loop7:
         JMP f7p2
 
 f7p1:
+	mov F7, #1H
 	mov A, R6
 	subb A, #0C0H
 	mov R6, A
@@ -266,6 +387,7 @@ f7p1:
 	LJMP switch	
 
 f7p2:
+	mov F7, #2H
 	mov A, R6
 	subb A, #80H
 	mov R6, A
@@ -290,6 +412,7 @@ loop8:
         JMP f8p2
 
 f8p1:
+	mov F8, #1H
 	mov A, R6
 	subb A, #18H
 	mov R6, A
@@ -300,6 +423,7 @@ f8p1:
 	LJMP switch
 
 f8p2:
+	mov F8, #2H
 	mov A, R6
 	subb A, #10H
 	mov R6, A
@@ -323,6 +447,7 @@ loop9:
         JMP f9p2
 
 f9p1:
+	mov F9, #1H
 	mov A, R6
 	subb A, #3H
 	mov R6, A
@@ -333,6 +458,7 @@ f9p1:
 	LJMP switch
 
 f9p2:
+	mov F9, #2H
 	mov A, R6
 	subb A, #2H
 	mov R6, A
