@@ -1,18 +1,21 @@
 ; TicTacToe
 
-R8 data 0x08
+; Registerabkürzungen 
+R8 data 0x08 ; Register für aktiven Spieler
 
-F1 data 0x09
-F2 data 0x0A
-F3 data 0x0B
-F4 data 0x0C
-F5 data 0x0D
-F6 data 0x0E
-F7 data 0x0F
-F8 data 0x10
-F9 data 0x11
+F1 data 0x09 ; Register für gesetztes Symbol in Feld 1
+F2 data 0x0A ; Register für gesetztes Symbol in Feld 2
+F3 data 0x0B ; Register für gesetztes Symbol in Feld 3
+F4 data 0x0C ; Register für gesetztes Symbol in Feld 4
+F5 data 0x0D ; Register für gesetztes Symbol in Feld 5
+F6 data 0x0E ; Register für gesetztes Symbol in Feld 6
+F7 data 0x0F ; Register für gesetztes Symbol in Feld 7
+F8 data 0x10 ; Register für gesetztes Symbol in Feld 8
+F9 data 0x11 ; Register für gesetztes Symbol in Feld 9
 
-Johannes data 0x12
+Johannes data 0x12 ; Register für den Gewinner des Spiels
+
+;------------------------------------------------------
 
 ; gesamtes Spielfeld wird leergeräumt
 mov p0, #0FFH
@@ -31,6 +34,8 @@ mov R6, #0DBH ; Zeile 7
 mov R7, #0DBH ; Zeile 8
 mov R8, #00H  ; Spieler 
 
+; Felder erhalten initial unterschiedliche Werte, 
+; damit keine Vergleichslogik eingebaut werden muss
 mov F1, #0FFH
 mov F2, #0FEH
 mov F3, #0FDH
@@ -54,6 +59,9 @@ setzero:
 	mov R8, #00H
 	jmp checkrow1
 
+; Überprüfung ob Gewinner vorliegt
+
+; Überprüfung der Spielfelder - horizontal
 checkrow1:
 	mov A, F1
 	cjne A, F2, checkrow2
@@ -75,6 +83,7 @@ checkrow3:
 	mov Johannes, A
 	jmp getwinner
 
+; Überprüfung der Spielfelder - vertikal
 checkcol1:
 	mov A, F1
 	cjne A, F4, checkcol2
@@ -96,6 +105,7 @@ checkcol3:
 	mov Johannes, A
 	jmp getwinner
 
+; Überprüfung der Spielfelder - diagonal
 checkdiag1:
 	mov A, F1
 	cjne A, F5, checkdiag2
@@ -113,11 +123,13 @@ checkdiag2:
 nope:
 	ljmp display
 
+; Schreibe den Gewinner auf ein weiteres Register -> Speicherplatz haben wir ja xD
 getwinner:
 	mov A, Johannes
 	cjne A, #2H, winner1
 	jmp winner2
 
+; Gewinner 1 wird als großes Quadrat angezeigt
 winner1:
 	mov R0, #0FFH
 	mov R1, #0FFH
@@ -129,6 +141,7 @@ winner1:
 	mov R7, #0FFH
 	ljmp display
 
+; Gewinner 2 wird als große Diagonale angezeigt
 winner2:
 	mov R0, #0FFH
 	mov R1, #0FFH
@@ -140,6 +153,9 @@ winner2:
 	mov R7, #0FFH
 	ljmp display
 
+;----------------------------------------------------
+
+; Überprüfung der Schaltermatrix
 schalter:
 	setb P2.2
 	setb P2.1
@@ -148,7 +164,7 @@ schalter:
 
 	; jetzt jede Spalte prüfen
 	JB P2.4,Check1
-loop1:
+loop1: ; Warten bis Schalter wieder losgelassen wird
 	mov A, P2
 	cjne A, #0FEH, loop1
 
@@ -156,6 +172,8 @@ loop1:
 	CJNE A, #00H, f1p1
 	JMP f1p2
 
+;----------------------
+; Spieler in Spielfeld eintragen, indem Hewerte in R0-R7 neu berechnet werden
 f1p1:
 	mov F1, #1H
 	mov A, R0
@@ -177,7 +195,8 @@ f1p2:
 	subb A, #40H
 	mov R1, A
 	LJMP switch
-	
+;-----------------------
+; äquivalent alle Schalter in der Schaltermatrix	
            
 Check1: setb P2.2
 	setb P2.1
@@ -472,37 +491,39 @@ Check9: Setb P2.2
 	setb P2.0
 	setb P2.1
 
+;--------------------------------
 
+; Zeichnen des Spielfelds mit den Registerwerten aus 0x00 bis 0x07
 display:
-mov P0, R0
+mov P0, R0 ; Zeichne Zeile 1
 clr p1.7
 setb p1.7
 
-mov P0, R1
+mov P0, R1 ; Zeichne Zeile 2
 clr p1.6
 setb p1.6
 
-mov P0, R2
+mov P0, R2 ; Zeichne Zeile 3
 clr p1.5
 setb p1.5
 
-mov P0, R3
+mov P0, R3 ; Zeichne Zeile 4
 clr p1.4
 setb p1.4
 
-mov P0, R4
+mov P0, R4 ; Zeichne Zeile 5
 clr p1.3
 setb p1.3
 
-mov P0, R5
+mov P0, R5 ; Zeichne Zeile 6
 clr p1.2
 setb p1.2
 
-mov P0, R6
+mov P0, R6 ; Zeichne Zeile 7
 clr p1.1
 setb p1.1
 
-mov P0, R7
+mov P0, R7; Zeichne Zeile 8
 clr p1.0
 setb p1.0
 
