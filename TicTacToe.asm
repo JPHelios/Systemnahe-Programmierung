@@ -529,10 +529,3 @@ setb p1.0
 
 ;JMP schalter
 LJMP schalter
-
-
-
-
-
-
-
